@@ -5,7 +5,7 @@ describe('template spec', () => {
     cy.get("p").should("contain", "From github CI")
   })
 
-    it('fails', () => {
+    it.only('fails', () => {
     cy.visit('/')
     cy.get("h1").should("contain", "Failed")
     })
