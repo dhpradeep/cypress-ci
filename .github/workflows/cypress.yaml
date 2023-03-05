@@ -17,6 +17,7 @@ jobs:
         with:
           install-command: yarn install
       - uses: actions/upload-artifact@v2
+        id: artifacts
         if: failure()
         with:
           name: cypress-videos
@@ -25,12 +26,13 @@ jobs:
             cypress/videos
       - name: Post to a Slack channel
         id: slack
-        if: always()
+        if: failure()
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: 'C04S0D9UQTH'
           payload: |
             {
+              "text": "Failed, see the result here: ${{ steps.artifacts.outputs.artifact_url }}"
               "blocks": [
                 {
                   "type": "section",
