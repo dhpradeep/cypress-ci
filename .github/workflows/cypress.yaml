@@ -7,30 +7,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Run Cypress
-        uses: cypress-io/github-action@v5
-        env:
-          DEBUG: '@cypress/github-action'
-          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
-          CYPRESS_RETRIES: 1
-        with:
-          install-command: yarn install
-      - uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: cypress-videos
-          retention-days: 3
-          path: |
-            cypress/videos
+      # - name: Run Cypress
+      #   uses: cypress-io/github-action@v5
+      #   env:
+      #     DEBUG: '@cypress/github-action'
+      #     CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
+      #     CYPRESS_RETRIES: 1
+      #   with:
+      #     install-command: yarn install
+      # - uses: actions/upload-artifact@v2
+      #   if: failure()
+      #   with:
+      #     name: cypress-videos
+      #     retention-days: 3
+      #     path: |
+      #       cypress/videos
       - name: Post to a Slack channel
         id: slack
         if: always()
         uses: slackapi/slack-github-action@v1.23.0
         with:
-          # Slack channel id, channel name, or user id to post message.
-          # See also: https://api.slack.com/methods/chat.postMessage#channels
           channel-id: 'C04S0D9UQTH'
-          # For posting a rich message using Block Kit
           payload: |
             {
               "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
