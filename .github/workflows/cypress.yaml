@@ -15,14 +15,14 @@ jobs:
       - name: Install Yarn
         run: yarn install
       - name: Run Cypress
-        uses: cypress-io/github-action@v3.1.0
+        uses: cypress-io/github-action@v5
         env:
           DEBUG: '@cypress/github-action'
           CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
           CYPRESS_RETRIES: 1
         with:
           install-command: yarn --immutable
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v2
         if: failure()
         with:
           retention-days: 1
