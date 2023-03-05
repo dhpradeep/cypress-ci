@@ -1,6 +1,7 @@
 describe('template spec', () => {
   it('passes', () => {
-    cy.visit('https://example.cypress.io')
-    cy.get("h1").should("contain", "Kitchen Sink")
+    cy.visit('/')
+    cy.get("h1").should("contain", "Cypress Test")
+    cy.get("p").should("contain", "From github CI")
   })
 })
