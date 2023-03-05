@@ -29,7 +29,7 @@ jobs:
           channel-id: 'C04S0D9UQTH'
           payload: |
             {
-              "text": "Successfully cypress tests :white_check_mark:",
+              "text": "Cypress tests runs successfully :white_check_mark:"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -40,7 +40,7 @@ jobs:
           channel-id: 'C04S0D9UQTH'
           payload: |
             {
-              "text": "Failed cypress tests :x:",
+              "text": "Cypress tests are getting failed :x: here is the artifact: "
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
