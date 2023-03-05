@@ -8,7 +8,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Run Cypress
-        id: cypress
         uses: cypress-io/github-action@v5
         env:
           DEBUG: '@cypress/github-action'
@@ -17,7 +16,6 @@ jobs:
         with:
           install-command: yarn install
       - uses: actions/upload-artifact@v2
-        id: artifacts
         if: failure()
         with:
           name: cypress-videos
@@ -25,23 +23,24 @@ jobs:
           path: |
             cypress/videos
       - name: Post to a Slack channel
-        id: slack
+        if: success()
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: 'C04S0D9UQTH'
+          payload: |
+            {
+              "text": "Successfully cypress tests :white_check_mark:",
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: Post to a Slack channel
         if: failure()
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: 'C04S0D9UQTH'
           payload: |
             {
-              "text": "Failed, see the result here: ${{ steps.artifacts.outputs.artifact_url }}"
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "${{ steps.cypress.output }}"
-                  }
-                }
-              ]
+              "text": "Failed cypress tests :x:",
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
