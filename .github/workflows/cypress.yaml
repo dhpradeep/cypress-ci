@@ -7,13 +7,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Node 16.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-          cache: yarn
-      - name: Install Yarn
-        run: yarn install
       - name: Run Cypress
         uses: cypress-io/github-action@v5
         env:
@@ -21,7 +14,7 @@ jobs:
           CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
           CYPRESS_RETRIES: 1
         with:
-          install-command: yarn --immutable
+          install-command: yarn install
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
