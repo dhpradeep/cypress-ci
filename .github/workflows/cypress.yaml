@@ -22,7 +22,7 @@ jobs:
           CYPRESS_RETRIES: 1
         with:
           install-command: yarn --immutable
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           retention-days: 1
