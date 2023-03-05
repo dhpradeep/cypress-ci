@@ -1,0 +1,30 @@
+name: 'Run Cypress tests'
+on: [deployment_status]
+jobs:
+  cypress:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: yarn
+      - name: Install Yarn
+        run: yarn install
+      - name: Run Cypress
+        uses: cypress-io/github-action@v3.1.0
+        env:
+          DEBUG: '@cypress/github-action'
+          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
+          CYPRESS_RETRIES: 1
+        with:
+          install-command: yarn --immutable
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          retention-days: 1
+          path: |
+            cypress/videos
