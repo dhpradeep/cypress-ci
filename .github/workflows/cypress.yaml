@@ -22,3 +22,13 @@ jobs:
           retention-days: 3
           path: |
             cypress/videos
+      - name: Send Slack message
+        uses: rtCamp/action-slack-notify@v2.2.0
+        if: always()
+        with:
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+          channel: '#cypresstest'
+          message: |
+            :heavy_check_mark: Cypress tests passed for ${{ github.repository }}!
+            Check out the report here: ${{ steps.cypress.outputs }}
+
