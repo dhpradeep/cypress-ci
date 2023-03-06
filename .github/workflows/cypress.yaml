@@ -1,10 +1,6 @@
 name: 'Run Cypress tests'
 
-on:
-  pull_request:
-    types: [opened, synchronize, ready_for_review]
-    branches:
-      - "main"
+on: [deployment_status]
 
 jobs:
   cypress:
@@ -13,6 +9,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: print
+        run: echo github.event.pull_request
       - name: Run Cypress
         uses: cypress-io/github-action@v5
         env:
@@ -35,7 +33,7 @@ jobs:
           channel-id: 'C02B1AD98P2'
           payload: |
             {
-              "text": "Cypress tests runs successfully :white_check_mark:"
+              "text": "Cypress tests run successfully :white_check_mark:"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
