@@ -5,7 +5,7 @@ on: [deployment_status]
 jobs:
   cypress:
     # if my current deployment status is success and this is on PR open state then only run
-    if: github.event.deployment_status.state == 'success' && github.event.pull_request.state == 'open'
+    if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
