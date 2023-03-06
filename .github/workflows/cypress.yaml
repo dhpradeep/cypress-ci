@@ -1,6 +1,6 @@
 name: 'Run Cypress tests'
 
-on: [deployment_status]
+on: [pull_request]
 
 jobs:
   cypress:
