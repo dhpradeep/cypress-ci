@@ -4,7 +4,7 @@ on: [deployment_status]
 
 jobs:
   cypress:
-    if: github.event.deployment_status.state == 'success' && github.event.pull_request != null && github.event.pull_request.state == 'open'
+    if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
