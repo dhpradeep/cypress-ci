@@ -1,14 +1,12 @@
 name: 'Run Cypress tests'
 
 on:
-  pull_request:
-    types: [opened, synchronize, ready_for_review]
-    branches:
-      - "main"
+  deployment_status:
+    types: [success]
 
 jobs:
   cypress:
-    if: github.event.deployment_status.state == 'success'
+    if: github.event.pull_request != null && github.event.pull_request.state == 'open'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
