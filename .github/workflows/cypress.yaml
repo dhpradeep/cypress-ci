@@ -1,6 +1,6 @@
 name: 'Run Cypress tests'
 
-on: deployment_status
+on: [deployment_status]
 
 jobs:
   cypress:
@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: print
+        run: echo ${{ github.event.pull_request }}
       - name: Run Cypress
         uses: cypress-io/github-action@v5
         env:
