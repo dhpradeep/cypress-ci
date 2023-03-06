@@ -1,5 +1,11 @@
 name: 'Run Cypress tests'
-on: [deployment_status]
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+    branches:
+      - "main"
+
 jobs:
   cypress:
     if: github.event.deployment_status.state == 'success'
@@ -26,7 +32,7 @@ jobs:
         if: success()
         uses: slackapi/slack-github-action@v1.23.0
         with:
-          channel-id: 'C04S0D9UQTH'
+          channel-id: 'C02B1AD98P2'
           payload: |
             {
               "text": "Cypress tests runs successfully :white_check_mark:"
@@ -37,7 +43,7 @@ jobs:
         if: failure()
         uses: slackapi/slack-github-action@v1.23.0
         with:
-          channel-id: 'C04S0D9UQTH'
+          channel-id: 'C02B1AD98P2'
           payload: |
             {
               "text": "Cypress tests are getting failed :x: here is the artifact: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
