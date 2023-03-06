@@ -35,7 +35,7 @@ jobs:
           channel-id: 'C02B1AD98P2'
           payload: |
             {
-              "text": "Cypress tests runs successfully :white_check_mark:"
+              "text": "Cypress tests run successfully :white_check_mark:"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
