@@ -16,7 +16,9 @@ jobs:
           DEPLOYMENT_URL=$(curl -s "https://api.github.com/repos/${{ github.repository }}/deployments?environment=production&per_page=1" | jq -r '.[0].statuses_url')
           DEPLOYMENT_STATE=$(curl -s "$DEPLOYMENT_URL" | jq -r '.[0].state')
           echo "::setOutput name=deployment_state::$DEPLOYMENT_STATE"
-      
+      - name: Print deployment state
+        run: |
+          echo "Latest deployment state: ${{ steps.deployment_status.outputs.deployment_state }}"
       - name: Exit if deployment failed
         if: ${{ steps.deployment_status_check.outputs.deployment_state != 'success' }}
         run: |
