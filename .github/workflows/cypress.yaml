@@ -23,10 +23,10 @@ jobs:
       - name: Run Cypress
         uses: cypress-io/github-action@v5
         env:
-          DEBUG: '@cypress/github-action'
           CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
           CYPRESS_RETRIES: 1
         with:
+          BUILD: export $(grep -v '^#' .env.cypress | xargs)
           start: yarn cypress:run
           install-command: yarn install
           config-file: cypress.config.js
