@@ -3,22 +3,45 @@ name: 'Run Cypress tests'
 on: [deployment_status]
 
 jobs:
-  cypress:
+  check-pr-state:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get PR status
+        id: pr_status
+        run: |
+          COMMIT_SHA=$(echo "${GITHUB_SHA}" | cut -c 1-7)
+          PR_STATE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${COMMIT_SHA}/pulls")
+          PR_STATE=$(echo "${PR_STATE}" | jq -r '.[].state')
+          echo "PR state: ${PR_STATE}"
+          echo "state=${PR_STATE}" >> $GITHUB_OUTPUT
+    
+      - name: Exit if PR is not open
+        if: ${{ steps.pr_status.outputs.state != 'open' }}
+        run: |
+          echo "Checking PR state!"
+          echo "${{ toJson(steps.pr_status.outputs) }}"
+          echo "::cancel-workflow::PR is not open"
+
+  cypress-chrome-test:
     if: github.event.deployment_status.state == 'success'
+    needs: check-pr-state
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: print
-        run: echo github.event.pull_request
+
       - name: Run Cypress
         uses: cypress-io/github-action@v5
-        env:
-          DEBUG: '@cypress/github-action'
+        env: 
           CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
           CYPRESS_RETRIES: 1
+          CYPRESS_RECORD_KEY: "null"
         with:
-          install-command: yarn install
+          install: true
+          record: false
+          browser: chrome
+          config-file: cypress.config.js
+
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
@@ -30,10 +53,10 @@ jobs:
         if: success()
         uses: slackapi/slack-github-action@v1.23.0
         with:
-          channel-id: 'C02B1AD98P2'
+          channel-id: 'C04S0D9UQTH'
           payload: |
             {
-              "text": "Cypress tests run successfully :white_check_mark:"
+              "text": "Cypress tests run successfully on chrome :white_check_mark:"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -41,11 +64,63 @@ jobs:
         if: failure()
         uses: slackapi/slack-github-action@v1.23.0
         with:
-          channel-id: 'C02B1AD98P2'
+          channel-id: 'C04S0D9UQTH'
           payload: |
             {
-              "text": "Cypress tests are getting failed :x: here is the artifact: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              "text": "Cypress tests are getting failed on chrome :x: here is the artifact: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    
+  cypress-firefox-test:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    needs: check-pr-state
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run Cypress
+        uses: cypress-io/github-action@v5
+        env: 
+          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
+          CYPRESS_RETRIES: 1
+          install: true
+        with:
+          install: true
+          record: false
+          browser: firefox
+          config-file: cypress.config.js
+
+
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-videos
+          retention-days: 3
+          path: |
+            cypress/videos
+      - name: Post to a Slack channel
+        if: success()
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: 'C04S0D9UQTH'
+          payload: |
+            {
+              "text": "Cypress tests run successfully on firefox :white_check_mark:"
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: Post to a Slack channel
+        if: failure()
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: 'C04S0D9UQTH'
+          payload: |
+            {
+              "text": "Cypress tests are getting failed on firefox :x: here is the artifact: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
 
