@@ -22,7 +22,7 @@ jobs:
           CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
           CYPRESS_RETRIES: 1
         with:
-          start: export $(< .env.cypress) && yarn cypress:run
+          start: yarn cypress:run
           install-command: yarn install
           config-file: cypress.config.js
       - uses: actions/upload-artifact@v2
