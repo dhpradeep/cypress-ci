@@ -22,6 +22,7 @@ jobs:
           echo "name=state::'${PR_STATE}'" >> $GITHUB_OUTPUT
           echo "::core.setOutput name=state1::'${PR_STATE}'"
           echo "::set-output name=state2::${PR_STATE}
+          echo "::setOutput name=state3::${PR_STATE}
     
       - name: Exit if deployment failed
         if: ${{ steps.pr_status.outputs.state != 'open' }}
