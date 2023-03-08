@@ -19,13 +19,12 @@ jobs:
         if: ${{ steps.pr_status.outputs.state != 'open' }}
         run: |
           echo "Checking PR state!"
-          echo "${{ toJson(steps.pr_status.outputs) }}"
-          echo "::cancel-workflow::PR is not open"
+          echo "PR state: ${{ steps.pr_status.outputs.state }}"
 
   cypress-chrome-test:
-    if: github.event.deployment_status.state == 'success'
     needs: check-pr-state
     runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success' && needs.pr_status.outputs.state == 'open'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -73,9 +72,9 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
     
   cypress-firefox-test:
-    if: github.event.deployment_status.state == 'success'
-    runs-on: ubuntu-latest
     needs: check-pr-state
+    runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success' && needs.pr_status.outputs.state == 'open'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
