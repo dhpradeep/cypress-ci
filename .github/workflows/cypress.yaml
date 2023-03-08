@@ -24,6 +24,7 @@ jobs:
         if: ${{ steps.deployment_status_check.outputs.pr_state != 'open' }}
         run: |
           echo "Deployment failed!"
+          echo ${{ steps.pr_status.outputs.pr_state }}
           exit 1
 
       - name: Run Cypress
