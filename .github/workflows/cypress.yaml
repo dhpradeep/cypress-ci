@@ -6,14 +6,10 @@ env:
   CYPRESS_EMAIL: "abc@gmail.com"
 
 jobs:
-  cypress:
+  cypress-chrome-test:
     # if my current deployment status is success and this is on PR open state then only run
     # if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        containers: [1, 2, 3]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -24,8 +20,9 @@ jobs:
           CYPRESS_BASE_URL: https://cypress-i0mnd2y3b-dhpradeep.vercel.app
           CYPRESS_RETRIES: 1
           CYPRESS_RECORD_KEY: "null"
-          install: true
-          parallel: true
+        with:
+          record: false
+          browser: chrome
           config-file: cypress.config.js
 
       - uses: actions/upload-artifact@v2
@@ -57,4 +54,55 @@ jobs:
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    
+  cypress-firefox-test:
+    # if my current deployment status is success and this is on PR open state then only run
+    # if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run Cypress
+        uses: cypress-io/github-action@v5
+        env: 
+          CYPRESS_BASE_URL: https://cypress-i0mnd2y3b-dhpradeep.vercel.app
+          CYPRESS_RETRIES: 1
+          install: true
+        with:
+          record: false
+          browser: firefox
+          config-file: cypress.config.js
+
+
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-videos
+          retention-days: 3
+          path: |
+            cypress/videos
+      - name: Post to a Slack channel
+        if: success()
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: 'C04S0D9UQTH'
+          payload: |
+            {
+              "text": "Cypress tests run successfully :white_check_mark:"
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: Post to a Slack channel
+        if: failure()
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: 'C04S0D9UQTH'
+          payload: |
+            {
+              "text": "Cypress tests are getting failed :x: here is the artifact: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
 
