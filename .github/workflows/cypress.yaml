@@ -4,21 +4,20 @@ on: [deployment_status]
 
 jobs:
   install-deps:
-    # if: github.event.deployment_status.state == 'success'
+    if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install
 
   cypress-chrome-test:
-    if: github.event.deployment_status.state == 'success'
     needs: [install-deps]
     runs-on: ubuntu-latest
     steps:
@@ -68,7 +67,6 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
     
   cypress-firefox-test:
-    if: github.event.deployment_status.state == 'success'
     needs: [install-deps]
     runs-on: ubuntu-latest
     steps:
