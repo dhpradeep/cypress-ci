@@ -16,9 +16,10 @@ jobs:
           PULL_REQUEST_URL=$(curl -s "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls" | jq -r '.[0].url')
           PULL_REQUEST_STATE=$(curl -s "$PULL_REQUEST_URL" -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" | jq -r '.state')
           echo "::setOutput name=pr_state::$PULL_REQUEST_STATE"
-      - name: Print pull request status
+      - name: Print curl output
         run: |
-          echo "Current commit is in an open pull request with state: ${{ steps.pr_status.outputs.pr_state }}"
+          DEPLOYMENT_URL=$(curl -s "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls" | jq -r '.[0].url')
+          curl -s "$DEPLOYMENT_URL" | jq
       - name: Print deployment state
         run: |
           echo "Latest deployment state: ${{ steps.deployment_status.outputs.deployment_state }}"
