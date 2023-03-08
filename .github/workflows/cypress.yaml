@@ -27,7 +27,7 @@ jobs:
         if: ${{ steps.pr_status.outputs.state != 'open' }}
         run: |
           echo "Deployment Continue!"
-          echo "${{ toJson(steps.pr_status.outputs) }}" | jq .
+          echo "${{ toJson(steps.pr_status.outputs) }}"
           exit 1
 
       - name: Run Cypress
