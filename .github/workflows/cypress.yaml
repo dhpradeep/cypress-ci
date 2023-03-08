@@ -20,11 +20,8 @@ jobs:
         run: |
           DEPLOYMENT_URL=$(curl -s "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls" | jq -r '.[0].url')
           curl -s "$DEPLOYMENT_URL" | jq
-      - name: Print deployment state
-        run: |
-          echo "Latest deployment state: ${{ steps.deployment_status.outputs.deployment_state }}"
       - name: Exit if deployment failed
-        if: ${{ steps.deployment_status_check.outputs.deployment_state != 'success' }}
+        if: ${{ steps.deployment_status_check.outputs.pr_state != 'open' }}
         run: |
           echo "Deployment failed!"
           exit 1
