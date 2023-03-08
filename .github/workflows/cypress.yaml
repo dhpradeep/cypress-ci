@@ -10,6 +10,10 @@ jobs:
     # if my current deployment status is success and this is on PR open state then only run
     # if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -21,8 +25,8 @@ jobs:
           CYPRESS_RETRIES: 1
         with:
           install: true
+          parallel: true
           config-file: cypress.config.js
-          # cypress.env.json
 
       - uses: actions/upload-artifact@v2
         if: failure()
