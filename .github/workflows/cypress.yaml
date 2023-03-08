@@ -10,26 +10,40 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Set environment variables
+        run: source .env.cypress
+
+      - name: Run Cypress tests
+        run: yarn cypress:run -- --env CYPRESS_BASE_URL=${{ github.event.deployment_status.target_url }} --config-file cypress.config.js
       # - name: Dump GitHub context
       #   env:
       #     GITHUB_CONTEXT: ${{ toJson(github) }}
       #   run: |
       #     echo "$GITHUB_CONTEXT"
-      - name: Load environment variables
-        run: |
-          export $(grep -v '^#' .env.cypress | xargs)
-        env:
-          ENV_FILE: .env.cypress
-      - name: Run Cypress
-        uses: cypress-io/github-action@v5
-        env:
-          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
-          CYPRESS_RETRIES: 1
-        with:
-          build: ls -la
-          start: yarn cypress:run
-          install-command: yarn install
-          config-file: cypress.config.js
+      # - name: Load environment variables
+      #   run: |
+      #     export $(grep -v '^#' .env.cypress | xargs)
+      #   env:
+      #     ENV_FILE: .env.cypress
+      # - name: Run Cypress
+      #   uses: cypress-io/github-action@v5
+      #   env: 
+          # CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
+          # CYPRESS_RETRIES: 1
+        # with:
+        #   build: ls -la
+        #   start: yarn cypress:run
+        #   install-command: yarn install
+        #   config-file: cypress.config.js
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
