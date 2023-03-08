@@ -22,9 +22,9 @@ jobs:
           echo "PR state: ${{ steps.pr_status.outputs.state }}"
 
   cypress-chrome-test:
-    if: github.event.deployment_status.state == 'success' && steps.pr_status.outputs.state == 'open'
     needs: check-pr-state
     runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success' && needs.pr_status.outputs.state == 'open'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -72,9 +72,9 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
     
   cypress-firefox-test:
-    if: github.event.deployment_status.state == 'success' && steps.pr_status.outputs.state == 'open'
-    runs-on: ubuntu-latest
     needs: check-pr-state
+    runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success' && needs.pr_status.outputs.state == 'open'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
