@@ -19,13 +19,13 @@ jobs:
           PR_STATE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}")
           PR_STATE=$(echo "${PR_STATE}" | jq -r '.state')
           echo "PR state: ${PR_STATE}"
-          # echo "${PR_STATE}" >> $GITHUB_OUTPUT
+          echo "name=state::'${PR_STATE}'" >> $GITHUB_OUTPUT
     
       - name: Exit if deployment failed
         if: ${{ steps.pr_status.outputs.state != 'open' }}
         run: |
           echo "Deployment Continue!"
-          echo ${{ steps.pr_status.outputs.state }}
+          echo ${{ steps.pr_status.outputs }}
           exit 1
 
       - name: Run Cypress
