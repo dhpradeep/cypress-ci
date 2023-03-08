@@ -2,6 +2,9 @@ name: 'Run Cypress tests'
 
 on: [deployment_status]
 
+env:
+  CYPRESS_EMAIL: "abc@gmail.com"
+
 jobs:
   cypress:
     # if my current deployment status is success and this is on PR open state then only run
