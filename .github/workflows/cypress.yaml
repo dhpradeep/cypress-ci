@@ -22,12 +22,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Make envfile
-        uses: SpicyPizza/create-envfile@v1
-        with:
-          directory: './'
-          file_name: '.env.cypress'
-
       - name: Run Cypress tests
         run: yarn cypress:run -- --config baseUrl=${{ github.event.deployment_status.target_url }} --config-file=cypress.config.js
       # - name: Dump GitHub context

@@ -16,8 +16,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "cypress:open": "export $(< .env.cypress) && yarn run cypress open",
-    "cypress:run": "export $(< .env.cypress) && yarn run cypress run"
+    "cypress:open": "yarn run cypress open",
+    "cypress:run": "yarn run cypress run"
   },
   "eslintConfig": {
     "extends": [
