@@ -26,7 +26,7 @@ jobs:
           CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
           CYPRESS_RETRIES: 1
         with:
-          build: export $(grep -v '^#' .env.cypress | xargs)
+          build: ls -la
           start: yarn cypress:run
           install-command: yarn install
           config-file: cypress.config.js
