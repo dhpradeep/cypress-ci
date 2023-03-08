@@ -24,10 +24,14 @@ jobs:
   cypress-chrome-test:
     needs: check-pr-state
     runs-on: ubuntu-latest
-    if: github.event.deployment_status.state == 'success' && needs.pr_status.outputs.state == 'open'
+    if: github.event.deployment_status.state == 'success'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Print
+        run: |
+          echo "${{ toJson(needs.pr_status.outputs) }}"
 
       - name: Run Cypress
         uses: cypress-io/github-action@v5
