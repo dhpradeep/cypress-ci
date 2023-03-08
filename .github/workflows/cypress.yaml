@@ -23,7 +23,7 @@ jobs:
         env: 
           CYPRESS_BASE_URL: https://cypress-i0mnd2y3b-dhpradeep.vercel.app
           CYPRESS_RETRIES: 1
-        with:
+          CYPRESS_RECORD_KEY: "null"
           install: true
           parallel: true
           config-file: cypress.config.js
