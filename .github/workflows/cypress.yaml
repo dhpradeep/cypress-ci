@@ -14,21 +14,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-
-      - name: Install dependencies
-        run: yarn install
-
       - name: Run Cypress
         uses: cypress-io/github-action@v5
         env: 
           CYPRESS_BASE_URL: https://cypress-i0mnd2y3b-dhpradeep.vercel.app
           CYPRESS_RETRIES: 1
         with:
-          install: false
+          install: true
           config-file: cypress.config.js
           # cypress.env.json
 
