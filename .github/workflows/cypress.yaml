@@ -23,7 +23,7 @@ jobs:
         run: source .env.cypress
 
       - name: Run Cypress tests
-        run: yarn cypress:run -- --config baseUrl=${{ github.event.deployment_status.target_url }} --config-file cypress.config.js
+        run: yarn cypress:run -- --config baseUrl=${{ github.event.deployment_status.target_url }} --config-file=cypress.config.js
       # - name: Dump GitHub context
       #   env:
       #     GITHUB_CONTEXT: ${{ toJson(github) }}
