@@ -3,22 +3,8 @@ name: 'Run Cypress tests'
 on: [deployment_status]
 
 jobs:
-  install-deps:
-    if: github.event.deployment_status.state == 'success'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn install
-
   cypress-chrome-test:
-    needs: [install-deps]
+    if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,7 +17,7 @@ jobs:
           CYPRESS_RETRIES: 1
           CYPRESS_RECORD_KEY: "null"
         with:
-          install: false
+          install: true
           record: false
           browser: chrome
           config-file: cypress.config.js
@@ -67,7 +53,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
     
   cypress-firefox-test:
-    needs: [install-deps]
+    if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -80,7 +66,7 @@ jobs:
           CYPRESS_RETRIES: 1
           install: true
         with:
-          install: false
+          install: true
           record: false
           browser: firefox
           config-file: cypress.config.js
