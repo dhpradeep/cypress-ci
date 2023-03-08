@@ -14,15 +14,13 @@ jobs:
           PR_STATE=$(echo "${PR_STATE}" | jq -r '.[].state')
           echo "PR state: ${PR_STATE}"
           echo "state=${PR_STATE}" >> $GITHUB_OUTPUT
-    
-      - name: Exit if PR is not open
+
+      - name: Cancel workflow if PR is not open
         if: ${{ steps.pr_status.outputs.state != 'open' }}
-        run: |
-          echo "Checking PR state!"
-          curl -X POST \
-              -H "Accept: application/vnd.github.v3+json" \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel
+        uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow_id: ${{ github.workflow }}
 
   cypress-chrome-test:
     if: github.event.deployment_status.state == 'success'
