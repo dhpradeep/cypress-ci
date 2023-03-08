@@ -21,6 +21,7 @@ jobs:
           echo "Checking PR state!"
           echo "${{ toJson(steps.pr_status.outputs) }}"
           echo "::cancel-workflow::PR is not open"
+          echo "cancel=true" >> $GITHUB_OUTPUT
 
   cypress-chrome-test:
     if: github.event.deployment_status.state == 'success'
