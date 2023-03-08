@@ -3,7 +3,7 @@ describe('template spec', () => {
     cy.visit('/')
     cy.get("h1").should("contain", "Cypress Test")
     cy.get("p").should("contain", "From github CI")
-    cy.log("Success")
+    cy.log("Success!!")
     expect(Cypress.env("CYPRESS_EMAIL")).to.equal("abc@gmail.com")
   })
 
