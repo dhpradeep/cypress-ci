@@ -31,7 +31,7 @@ jobs:
 
       - name: Print
         run: |
-          echo "${{ toJson(needs.pr_status.outputs) }}"
+          echo "${{ toJson(needs.check-pr-state.pr_status.outputs) }}"
 
       - name: Run Cypress
         uses: cypress-io/github-action@v5
