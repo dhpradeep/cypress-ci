@@ -1,14 +1,11 @@
 name: 'Run Cypress tests'
 
-on: [push]
-
-env:
-  CYPRESS_EMAIL: "abc@gmail.com"
+on: [deployment_status]
 
 jobs:
   cypress-chrome-test:
     # if my current deployment status is success and this is on PR open state then only run
-    # if: github.event.deployment_status.state == 'success'
+    if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,7 +14,7 @@ jobs:
       - name: Run Cypress
         uses: cypress-io/github-action@v5
         env: 
-          CYPRESS_BASE_URL: https://cypress-i0mnd2y3b-dhpradeep.vercel.app
+          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
           CYPRESS_RETRIES: 1
           CYPRESS_RECORD_KEY: "null"
         with:
@@ -39,7 +36,7 @@ jobs:
           channel-id: 'C04S0D9UQTH'
           payload: |
             {
-              "text": "Cypress tests run successfully :white_check_mark:"
+              "text": "Cypress tests run successfully on chrome :white_check_mark:"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -50,7 +47,7 @@ jobs:
           channel-id: 'C04S0D9UQTH'
           payload: |
             {
-              "text": "Cypress tests are getting failed :x: here is the artifact: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              "text": "Cypress tests are getting failed on chrome :x: here is the artifact: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -66,7 +63,7 @@ jobs:
       - name: Run Cypress
         uses: cypress-io/github-action@v5
         env: 
-          CYPRESS_BASE_URL: https://cypress-i0mnd2y3b-dhpradeep.vercel.app
+          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
           CYPRESS_RETRIES: 1
           install: true
         with:
@@ -89,7 +86,7 @@ jobs:
           channel-id: 'C04S0D9UQTH'
           payload: |
             {
-              "text": "Cypress tests run successfully :white_check_mark:"
+              "text": "Cypress tests run successfully on firefox :white_check_mark:"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -100,7 +97,7 @@ jobs:
           channel-id: 'C04S0D9UQTH'
           payload: |
             {
-              "text": "Cypress tests are getting failed :x: here is the artifact: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              "text": "Cypress tests are getting failed on firefox :x: here is the artifact: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
