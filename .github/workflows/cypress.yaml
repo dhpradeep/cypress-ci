@@ -20,11 +20,13 @@ jobs:
         run: |
           echo "Checking PR state!"
           echo "PR state: ${{ steps.pr_status.outputs.state }}"
+    outputs:
+      state: ${{ steps.pr_status.outputs.state }}
 
   cypress-chrome-test:
     needs: check-pr-state
     runs-on: ubuntu-latest
-    if: github.event.deployment_status.state == 'success' && needs.pr_status.outputs.state == 'open'
+    if: github.event.deployment_status.state == 'success' && needs.check-pr-state.outputs.state == 'open'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -74,7 +76,7 @@ jobs:
   cypress-firefox-test:
     needs: check-pr-state
     runs-on: ubuntu-latest
-    if: github.event.deployment_status.state == 'success' && needs.pr_status.outputs.state == 'open'
+    if: github.event.deployment_status.state == 'success' && needs.check-pr-state.outputs.state == 'open'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
