@@ -20,6 +20,8 @@ jobs:
         run: |
           echo "Checking PR state!"
           echo "PR state: ${{ steps.pr_status.outputs.state }}"
+    outputs:
+      state: ${{ steps.pr_status.outputs.state }}
 
   cypress-chrome-test:
     needs: check-pr-state
@@ -31,7 +33,7 @@ jobs:
 
       - name: Print
         run: |
-          echo "${{ toJson(needs.check-pr-state.pr_status.outputs) }}"
+          echo "${{ toJson(needs.check-pr-state.outputs) }}"
 
       - name: Run Cypress
         uses: cypress-io/github-action@v5
