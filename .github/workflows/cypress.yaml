@@ -11,6 +11,7 @@ jobs:
         run: |
           COMMIT_SHA=$(echo "${GITHUB_SHA}" | cut -c 1-7)
           PR_STATE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${COMMIT_SHA}/pulls")
+          echo "curl:: $(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${COMMIT_SHA}/pulls")"
           echo "api response:: ${PR_STATE}"
           PR_STATE=$(echo "${PR_STATE}" | jq -r '.[].state')
           echo "PR state: ${PR_STATE}"
